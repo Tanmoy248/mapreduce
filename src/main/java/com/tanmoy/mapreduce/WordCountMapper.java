@@ -1,4 +1,4 @@
-package com.wordcount;
+package com.tanmoy.mapreduce;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -21,7 +21,6 @@ public class WordCountMapper extends
 	
 	public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
 		
-	
     	
  //The course 2 of = ["The", "course", "2", "of"] 
 		String st [] = value.toString().split("\\s+");

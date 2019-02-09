@@ -1,4 +1,4 @@
-package com.wordcount;
+package com.tanmoy.mapreduce;
 
 import java.io.*;
 
