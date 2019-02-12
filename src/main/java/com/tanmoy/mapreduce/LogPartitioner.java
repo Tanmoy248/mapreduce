@@ -16,6 +16,7 @@ public class LogPartitioner extends Partitioner<Text,Text > implements
   /**
    * Set up the months hash map in the setConf method.
    */
+  
   public void setConf(Configuration configuration) {
     this.configuration = configuration;
     months.put("Jan", 0);
@@ -31,6 +32,7 @@ public class LogPartitioner extends Partitioner<Text,Text > implements
     months.put("Nov", 10);
     months.put("Dec", 11);
   }
+  
 
   /**
    * Implement the getConf method for the Configurable interface.
@@ -48,6 +50,9 @@ public class LogPartitioner extends Partitioner<Text,Text > implements
    * 
    * For this partitioner to work, the job configuration must have been
    * set so that there are exactly 12 reducers.
+   * Intermediate Key-value pairs are in the form of  (<IP> , <Jan>)
+   * the getPartition method directs the hadoop framework to choose the reducer 
+   * number returned by the method
    */
   public int getPartition(Text key, Text value, int numReduceTasks) {
     return (int) (months.get(value.toString()));
