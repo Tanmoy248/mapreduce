@@ -1,4 +1,4 @@
-package com.tanmoy.mapreduce;
+package com.tanmoy.mapreduce.customDataType;
 
 import java.io.IOException;
 
@@ -10,9 +10,9 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.io.*;
 import org.apache.hadoop.fs.*;
 
-public class LogDriver extends Configured implements Tool {
+public class WordcoDriver extends Configured implements Tool {
 	public static void main(String[] args) throws Exception {
-        int returnStatus = ToolRunner.run(new Configuration(), new LogDriver(), args);
+        int returnStatus = ToolRunner.run(new Configuration(), new WordcoDriver(), args);
         System.exit(returnStatus);
     }
 
@@ -24,18 +24,18 @@ public int run(String[] args) throws IOException{
 	Job job = new Job(getConf());
 	
 	
-	 job.setJobName("Log Partitioner");
+	 job.setJobName("Word Cooccurence");
 	
-	 job.setJarByClass(LogDriver.class);
+	 job.setJarByClass(WordcoDriver.class);
 
-	 job.setOutputKeyClass(Text.class);
+	 job.setOutputKeyClass(TextPair.class);
 	 job.setOutputValueClass(IntWritable.class);
-	 job.setMapOutputKeyClass(Text.class);
-	 job.setMapOutputValueClass(Text.class);
+	 job.setMapOutputKeyClass(TextPair.class);
+	 job.setMapOutputValueClass(IntWritable.class);
 	 
-	 job.setMapperClass(LogMapper.class);
-	 job.setReducerClass(LogReducer.class);
-	 job.setPartitionerClass(LogPartitioner.class);
+	 job.setMapperClass(WordcoMapper.class);
+	 job.setCombinerClass(WordcoReducer.class);
+	 job.setReducerClass(WordcoReducer.class);
 	
 	FileInputFormat.addInputPath(job, new Path(args[0]));
 	FileOutputFormat.setOutputPath(job,new Path(args[1]));

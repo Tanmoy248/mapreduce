@@ -1,4 +1,4 @@
-package com.tanmoy.mapreduce;
+package com.tanmoy.mapreduce.partitionerExample;
 
 import java.util.HashMap;
 

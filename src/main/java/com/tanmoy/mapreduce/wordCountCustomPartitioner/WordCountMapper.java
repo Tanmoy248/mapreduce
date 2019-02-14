@@ -1,4 +1,4 @@
-package com.tanmoy.mapreduce;
+package com.tanmoy.mapreduce.wordCountCustomPartitioner;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
