@@ -7,7 +7,7 @@ import org.apache.hadoop.io.*;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapred.lib.MultipleOutputs;
  
-public class WordCountReducer extends Reducer<Text, Text, Text, Text>{
+public class EmployeeReducer extends Reducer<Text, Text, Text, Text>{
 	
     public void reduce(Text key, Text value, Context context) throws IOException {
     // write the incoming records(name and dob) in proper month. 

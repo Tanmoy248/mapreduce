@@ -16,13 +16,14 @@ import org.apache.hadoop.conf.*;
 
 import helpers.*;
 
+// ./datasets/HR_Dataset.csv output3 ./datasets/HR_Dataset.txt
 
  
-public class WordCount extends Configured implements Tool{
+public class AssignmentDriver extends Configured implements Tool{
 	 
 	
 	public static void main(String[] args) throws Exception {
-	        int returnStatus = ToolRunner.run(new Configuration(), new WordCount(), args);
+	        int returnStatus = ToolRunner.run(new Configuration(), new AssignmentDriver(), args);
 	        System.exit(returnStatus);
 	    }
 
@@ -36,21 +37,25 @@ public class WordCount extends Configured implements Tool{
     	
     	 job.setJobName("Word Count");
     	
-    	 job.setJarByClass(WordCount.class);
+    	 job.setJarByClass(AssignmentDriver.class);
 
     	 job.setOutputKeyClass(Text.class);
-    	 job.setOutputValueClass(IntWritable.class);
+    	 job.setOutputValueClass(Text.class);
     	 
-    	 job.setMapperClass(WordCountMapper.class);
+    	 job.setMapperClass(EmployeeMapper.class);
     	 //job.setCombinerClass(WordCountReducer.class);
-    	 job.setReducerClass(WordCountReducer.class);
-    	 job.setPartitionerClass(WordCountPartitioner.class);
+    	 job.setReducerClass(EmployeeReducer.class);
+    	 // set no of reducer should match the total buckets in the custom partitioner
+    	 job.setNumReduceTasks(12);
+    	 job.setPartitionerClass(MonthwisePartitioner.class);
     	 
     	 Configuration conf = new Configuration();
     	 System.out.println("Connecting to -- "+conf.get("fs.defaultFS"));
     	
     	//UrlToHdfsFile helperFunction = new UrlToHdfsFile();
     	//Path inputPath = helperFunction.convertUriToHdfs(args[0], conf);
+    	 //String hdfsInput = new CSVToTilde().validate(args[0], args[3]);
+    	//String file = CSVToTilde(args[0], args[3]) ;
     	 
     	FileInputFormat.addInputPath(job, new Path(args[0]));
     	FileOutputFormat.setOutputPath(job,new Path(args[1]));

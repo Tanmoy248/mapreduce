@@ -7,7 +7,7 @@ import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.mapreduce.Partitioner;
 
-public class WordCountPartitioner extends Partitioner<Text,Text > implements
+public class MonthwisePartitioner extends Partitioner<Text,Text > implements
     Configurable {
 
   private Configuration configuration;
@@ -49,8 +49,9 @@ public class WordCountPartitioner extends Partitioner<Text,Text > implements
    * Note that January is represented as 0 rather than 1.
    * 
    * For this partitioner to work, the job configuration must have been
-   * set so that there are exactly 12 reducers.
-   * Intermediate Key-value pairs are in the form of  (<IP> , <Jan>)
+   * set so that there are exactly 12 reducers. 
+   * in the driver: job.setNumReducers(12)
+   * Intermediate Key-value pairs are in the form of  (<Employee | EID> , <Month>)
    * the getPartition method directs the hadoop framework to choose the reducer 
    * number returned by the method
    */
