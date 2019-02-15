@@ -1,8 +1,6 @@
-package com.tanmoy.mapreduce.Assignment;
+package com.tanmoy.mapreduce;
 
 import java.io.*;
-import java.net.URL;
-import java.util.Scanner;
 
 import org.apache.hadoop.mapred.TextOutputFormat;
 import org.apache.hadoop.mapred.lib.MultipleOutputs;
@@ -13,8 +11,6 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.*;
 import org.apache.hadoop.conf.*;
-
-import helpers.*;
 
 
  
@@ -42,16 +38,9 @@ public class WordCount extends Configured implements Tool{
     	 job.setOutputValueClass(IntWritable.class);
     	 
     	 job.setMapperClass(WordCountMapper.class);
-    	 //job.setCombinerClass(WordCountReducer.class);
+    	 job.setCombinerClass(WordCountReducer.class);
     	 job.setReducerClass(WordCountReducer.class);
-    	 job.setPartitionerClass(WordCountPartitioner.class);
-    	 
-    	 Configuration conf = new Configuration();
-    	 System.out.println("Connecting to -- "+conf.get("fs.defaultFS"));
     	
-    	//UrlToHdfsFile helperFunction = new UrlToHdfsFile();
-    	//Path inputPath = helperFunction.convertUriToHdfs(args[0], conf);
-    	 
     	FileInputFormat.addInputPath(job, new Path(args[0]));
     	FileOutputFormat.setOutputPath(job,new Path(args[1]));
     	   	

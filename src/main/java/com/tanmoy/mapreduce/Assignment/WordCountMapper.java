@@ -5,6 +5,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.apache.hadoop.filecache.DistributedCache;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -23,15 +26,22 @@ public class WordCountMapper extends
 		
     	
  //The course 2 of = ["The", "course", "2", "of"] 
-		String st [] = value.toString().split("\n");
+		String lineBuffer [] = value.toString().split("\n");
 		
-		
-        for(String st1 :  st) {
-        	String intermediateKey = st1.split(",")[0] + "|" +  st1.split(",")[1];
-        	String intermediateValue = st1.split(",")[12];
-     
-            context.write(new Text(intermediateKey.replaceAll("[^a-zA-Z]","").toLowerCase()), new Text(intermediateValue)); 
-            //"The"="the"
+		// read each line in csv, extract name , id, and dob
+		// extract month from dob and write as intermediate value
+        for(String st1 :  lineBuffer) {
+        	String[] columns = st1.split(",");
+        	String birthday = columns[12].split("/")[0] + "-" + columns[12].split("/")[1];
+        	String intermediateKey = columns[0] + "|" +  columns[1] + "|" + birthday;
+        	String intermediateValue = columns[12].split("/")[0];
+        	
+        	Pattern p = Pattern.compile("[a-z]");
+        	Matcher m = p.matcher(intermediateValue);
+        	
+        	if (m.find()) {
+            context.write(new Text(intermediateKey), new Text(intermediateValue)); 
+        	}
         }
 
 	}

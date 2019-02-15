@@ -7,19 +7,14 @@ import org.apache.hadoop.io.*;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapred.lib.MultipleOutputs;
  
-public class WordCountReducer extends Reducer<Text, IntWritable, Text, IntWritable>{
+public class WordCountReducer extends Reducer<Text, Text, Text, Text>{
 	
-    public void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException {
-  //("the",[1,1,1,1])
-        int count = 0;
-        
-        for(IntWritable val : values) {
-            count = count + val.get();
-         //("the",[1,1,1,1]) --> ("name | emp_id ", 4)  
-        }
+    public void reduce(Text key, Text value, Context context) throws IOException {
+    // write the incoming records(name and dob) in proper month. 
+    // the partitioner will handle that
         
         try {
-			context.write(key, new IntWritable(count));
+			context.write(key, value);
 		} catch (InterruptedException e) {
 		
 			e.printStackTrace();

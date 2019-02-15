@@ -1,0 +1,43 @@
+Hadoop Components Overview:
+
+FileInputFormat is the base class for all file-based InputFormats. 
+We provide FileInputFormat with the path to the input file or the directory containing the input files as an argument in FileInputFormat.addInputPath(). 
+FileInputFormat  divides the given files into Input Splits. Each input split is assigned to a single mapper for processing. 
+Hence, the number of map tasks is equal to the number of input splits. 
+By setting the split size, we can decide the number of mappers for our job. 
+ 
+Once the files are split and assigned to mappers, each map task must read data from the input split it has been assigned. 
+By default,  Mapper uses Hadoop’s TextInputFormat class to parse and read data from the given split. 
+TextInputFormat extends the FileInputFormat base class. The InputFormat for a job can be programmatically set using setInputFormatClass API.  
+
+ 
+Hadoop RecordReader:
+The RecordReader takes the byte-oriented view of input provided by the InputSplit, and presents as a record-oriented view for a Mapper. 
+It uses the data within the boundaries that were created by the InputSplit and creates Key-value pairs that can be understood and processed by the map function. 
+TextInputFormat class uses the LineRecordReader which treats each line of the input split as a separate record. 
+Furthermore, it uses the byte-offset of the beginning of the line in a split as the key and the complete line as the value. 
+There are several other InputFormats such as KeyValueTextInputFormat and NLineFormatInputfor for different purposes and data.
+
+Just like Input Format, OutputFormat determines certain properties, such as type, of the final output written by the RecordWriter to output files. 
+The FileOutputFormat.setOutputPath() method is used to set the output directory. It checks the existence of the given path to avoid overwriting. 
+FileOutputFormat is the base class for all file-based OutputFormat implementations. Every Reducer writes a separate file in this common output directory. 
+The default OutputFormat in Hadoop is TextOuputFormat. 
+TextOutputFormat’s default RecordWriter writes one record per line, by converting keys and values to strings using the toString() method. 
+The key and value in a record or line are separated by a tab character. 
+There exist other OutputFormats such as SequenceFileOutputFormat, MapFileOutputFormat to name a few.
+
+
+
+Hadoop Combiner:
+a combiner is known as semi-reducer since it helps in reducing the network I/O to a large extent by executing some part of the reduce phase in the map phase itself.
+setCombinerClass API allows user to pass a class as the combiner.
+
+job.setCombinerClass(“WordCountReducer.class”);
+
+The Reducer class itself may be used as a Combiner if the reduce function is commutative and associative. 
+If not, you need to write a separate class. 
+However, the org.apache.hadoop.mapreduce package does not provide any separate class for the Combiner, and hence, 
+you need to write the combine method by extending the Reducer class itself.
+
+While combiner’s input key-value format has to match the mapper’s output key-value format, 
+its output key-value format must also be the same since the reducer expects the same formats as written by the mapper.  

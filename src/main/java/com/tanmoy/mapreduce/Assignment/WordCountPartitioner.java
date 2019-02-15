@@ -19,18 +19,18 @@ public class WordCountPartitioner extends Partitioner<Text,Text > implements
   
   public void setConf(Configuration configuration) {
     this.configuration = configuration;
-    months.put("Jan", 0);
-    months.put("Feb", 1);
-    months.put("Mar", 2);
-    months.put("Apr", 3);
-    months.put("May", 4);
-    months.put("Jun", 5);
-    months.put("Jul", 6);
-    months.put("Aug", 7);
-    months.put("Sep", 8);
-    months.put("Oct", 9);
-    months.put("Nov", 10);
-    months.put("Dec", 11);
+    months.put("1", 0);
+    months.put("2", 1);
+    months.put("3", 2);
+    months.put("4", 3);
+    months.put("5", 4);
+    months.put("6", 5);
+    months.put("7", 6);
+    months.put("8", 7);
+    months.put("9", 8);
+    months.put("10", 9);
+    months.put("11", 10);
+    months.put("12", 11);
   }
   
 
@@ -57,6 +57,6 @@ public class WordCountPartitioner extends Partitioner<Text,Text > implements
   public int getPartition(Text key, Text value, int numReduceTasks) {
 	  String bucket = value.toString().split("/")[0];
 	  // 9 is the default bucket
-    return Integer.parseInt(bucket);
+    return months.get(bucket);
   }
 }
