@@ -19,16 +19,16 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 
-public class WordAvgLen
+public class LetterWiseAvgLength
 {
 	
     public static class TokenizerMapper
        extends Mapper<LongWritable, Text, Text, SumAndCount>
     {
 
-        private final static IntWritable one = new IntWritable(1);
+        //private final static IntWritable one = new IntWritable(1);
 
-        public void map(LongWritable key, Text value, Context context
+        public void map(LongWritable key, SumAndCount value, Context context
                     ) throws IOException, InterruptedException
         {
         	String st [] = value.toString().split("\\s+");
@@ -37,11 +37,13 @@ public class WordAvgLen
             for(String word :  st) {
          
                 String wordnew=word.replaceAll("[^a-zA-Z]",""); 
-                String firstLetter = wordnew.substring(0, 1);
+                //String firstLetter = wordnew.substring(0, 1);
                 
                 if(!wordnew.isEmpty()){
                 	// write ('a',SumAndCount(3,1))
-                	context.write(new Text(firstLetter),new SumAndCount(wordnew.length(),1));
+                	//context.write(new Text(firstLetter),new SumAndCount(wordnew.length(),1));
+                	String firstLetter = wordnew.substring(0, 1);
+                	context.write(new Text(firstLetter), new SumAndCount(wordnew.length(),1));
                 	
                 }
                 else continue;
@@ -55,7 +57,7 @@ public class WordAvgLen
     public static class IntSummer
        extends Reducer<Text,SumAndCount,Text,SumAndCount>
     {
-    	private final static IntWritable one = new IntWritable(1);
+    	//private final static IntWritable one = new IntWritable(1);
     	//private SumAndCount sumandcount = new SumAndCount(0,0);
     	public void reduce(Text key, Iterable<SumAndCount> values, Context context)
     	throws IOException, InterruptedException
@@ -87,12 +89,12 @@ public class WordAvgLen
             for (SumAndCount val : values)
             {
                 sum += val.getSum();
-                count+=val.getCount();
+                count+= val.getCount();
             }
 
             float avg=(sum/(float)count);
             String op="Average length of " + count + " words = " + avg;
-            context.write(new Text(key), new Text("op"));
+            context.write(new Text(key), new Text(op));
         }
     }
 
@@ -104,10 +106,10 @@ public class WordAvgLen
         Configuration conf = new Configuration();
         Job job = Job.getInstance(conf, "wordLenAvgCombiner");
 
-        job.setJarByClass(WordAvgLen.class);
+        job.setJarByClass(LetterWiseAvgLength.class);
 
         job.setMapperClass(TokenizerMapper.class);
-        //job.setCombinerClass(IntSummer.class);
+        job.setCombinerClass(IntSummer.class);
         job.setReducerClass(IntSumReducer.class);
 
         job.setMapOutputKeyClass(Text.class);
